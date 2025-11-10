@@ -26,6 +26,7 @@ function App() {
   // initialized the empty states or "choices" of the buttons and image array
   const [selectedBreed, setSelectedBreed] = useState("");
   const [images, setImages] = useState([]);
+  const [error, setError] = useState("");
   
   // async function runs collecting the selectedBreed's images
   async function getDogImages(breed){
@@ -34,7 +35,8 @@ function App() {
       setImages(data.message);
       
     } catch (error) {
-      console.log("Error fetching the dog images", error);
+      console.error("Error fetching the dog images", error);
+      alert("Error fetching the dog images. Please try again", error.message)
     }
   }
 
@@ -43,7 +45,9 @@ function App() {
     if(selectedBreed){
       getDogImages(selectedBreed);
     }
-
+    else if (!selectedBreed){
+      setError("Something went wrong getting the selected breed");
+    }
     // [selectedBreed] makes it so the code in this useEffect is run everytime the selectedBreed is changed
   }, [selectedBreed]);
 
@@ -74,7 +78,7 @@ function App() {
           {/* react uses key to identify each item in the mapping itself */}
           {/* allows react to only rerendeer what it has to if something is ever changed */}
           {images.map((url,index) => (
-            <DogImage key = {index} imageURL={url} breed={selectedBreed}/>
+            <DogImage key = {url + index} imageURL={url} breed={selectedBreed}/>
           ))}
         </div>
       </div>
